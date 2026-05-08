@@ -1,0 +1,49 @@
+{
+  "name": "sitepinger",
+  "version": "1.0.0",
+  "description": "A macOS desktop app to monitor website availability",
+  "main": "main.js",
+  "author": "SitePinger",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "build:dmg": "electron-builder --mac dmg",
+    "build:zip": "electron-builder --mac zip"
+  },
+  "build": {
+    "appId": "com.sitepinger.app",
+    "productName": "SitePinger",
+    "copyright": "Copyright © 2025 SitePinger",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        { "target": "dmg", "arch": ["x64"] }
+      ],
+      "darkModeSupport": true
+    },
+    "dmg": {
+      "title": "SitePinger",
+      "window": { "width": 540, "height": 380 }
+    },
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "index.html",
+      "styles.css",
+      "package.json",
+      "node_modules/**"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^29.4.6",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
+}
