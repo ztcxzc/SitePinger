@@ -34,7 +34,7 @@ SitePinger is a lightweight macOS desktop application that continuously pings an
 | App shell | [Electron 29](https://www.electronjs.org/) |
 | HTTP requests | [axios 1.7](https://axios-http.com/) (main process only — no CORS) |
 | Build tooling | [electron-builder 24](https://www.electron.build/) |
-| Platform | macOS (Intel x64) |
+| Platform | macOS — Intel (x64) & Apple Silicon (arm64) |
 
 All network requests run in the **main process** via IPC, completely bypassing browser CORS restrictions. The renderer only handles UI logic.
 
@@ -48,7 +48,7 @@ SitePinger/
 ├── renderer.js    ← UI logic: multi-pinger state, sidebar, history, DOM updates
 ├── index.html     ← App shell: sidebar layout, pinger detail panel, 300-limit modal
 ├── styles.css     ← Dark-theme design system (tokens, components, animations)
-└── package.json   ← Dependencies + electron-builder config (macOS x64 DMG)
+└── package.json   ← Dependencies + electron-builder config (macOS x64 + arm64 DMG)
 ```
 
 **IPC flow:**  
@@ -66,12 +66,13 @@ npm install
 # Development
 npm start
 
-# Build distributable DMG (macOS Intel x64)
+# Build distributable DMGs (Intel x64 + Apple Silicon arm64)
 npm run build
-# → dist/SitePinger-1.0.0.dmg
+# → dist/SitePinger-1.0.0.dmg        (Intel)
+# → dist/SitePinger-1.0.0-arm64.dmg  (Apple Silicon)
 ```
 
-**Requirements:** Node.js 18+, macOS (Intel)
+**Requirements:** Node.js 18+, macOS
 
 ---
 
