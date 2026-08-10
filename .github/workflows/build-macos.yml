@@ -32,12 +32,22 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      # Build both architectures: arm64 for Apple silicon, x64 for older Intel
-      # Macs. electron-builder emits a separate dmg for each.
+      # Target zip rather than the default dmg.
+      #
+      # dmg-builder needs a background image that projects often reference but
+      # never commit, and it fails hard when the file is missing. A zip holding
+      # the .app is just as installable — drag it to Applications — and has no
+      # such dependency. dmg is then attempted separately, best-effort.
       - name: Build the app
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false' # do not hunt for a signing identity
-        run: npx electron-builder --mac --arm64 --x64 --publish never
+        run: npx electron-builder --mac zip --arm64 --x64 --publish never
+
+      - name: Also try a dmg (optional)
+        continue-on-error: true
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --mac dmg --arm64 --x64 --publish never -c.dmg.background=null
 
       - name: Show what was produced
         run: ls -lh dist/*.dmg dist/*.zip 2>/dev/null || ls -lh dist
