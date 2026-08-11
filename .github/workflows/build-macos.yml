@@ -32,6 +32,23 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      # Run the app's own build first when it has one.
+      #
+      # electron-builder packages whatever is on disk; it does not run your
+      # build script. An app whose index.html loads a bundled dist/bundle.js
+      # therefore ships without it and opens to a blank window that closes
+      # immediately. Skipped when the build script is really the packager.
+      - name: Build the renderer
+        run: |
+          set -e
+          SCRIPT=$(node -e "process.stdout.write((require('./package.json').scripts||{}).build||'')")
+          if [ -n "$SCRIPT" ] && ! echo "$SCRIPT" | grep -q 'electron-builder'; then
+            echo "running build: $SCRIPT"
+            npm run build
+          else
+            echo "no separate renderer build step; skipping"
+          fi
+
       # Target zip rather than the default dmg.
       #
       # dmg-builder needs a background image that projects often reference but
